@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+
 import { useQuery } from "react-query";
 import {
   Route,
@@ -10,6 +10,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import styled from "styled-components";
+import Helmets from "../Helmets";
 import { fetchCoinInfo, fetchCoinTickers } from "./api";
 import Chart from "./Chart";
 import Price from "./Price";
@@ -78,11 +79,9 @@ interface PriceData {
   };
 }
 
-interface ICoinProps {
-  isDark: boolean;
-}
+interface ICoinProps {}
 
-function Coin({ isDark }: ICoinProps) {
+function Coin({}: ICoinProps) {
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
   const priceMatch = useRouteMatch("/:coinId/price");
@@ -104,11 +103,7 @@ function Coin({ isDark }: ICoinProps) {
 
   return (
     <Container>
-      <Helmet>
-        <title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </title>
-      </Helmet>
+      <Helmets loading={loading} infoData={infoData} />
       <Header>
         <Title>
           <Home>
@@ -159,7 +154,7 @@ function Coin({ isDark }: ICoinProps) {
               <Price tickersData={tickersData} />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart isDark={isDark} coinId={coinId} />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
@@ -188,7 +183,7 @@ const Home = styled.span`
   position: absolute;
   font-size: 14px;
   color: ${(props) => props.theme.accentColor};
-  top: 70px;
+  top: 60px;
   left: 10px;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
