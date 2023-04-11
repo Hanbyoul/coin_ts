@@ -3,6 +3,7 @@ import { fetchCoinHistory } from "./api";
 import ApexCharts from "react-apexcharts";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./atoms";
+import styled from "styled-components";
 
 interface Ihistory {
   time_open: number;
@@ -24,15 +25,15 @@ function Chart({ coinId }: ChartProps) {
   const { isLoading, data, isSuccess } = useQuery<Ihistory[]>(
     ["ohlcv", coinId],
     () => fetchCoinHistory(coinId)
-    // {
-    //   refetchInterval: 10000,
-    // }
   );
-
+  console.log("isLoading", isLoading);
+  console.log("data", data);
+  console.log("data", data && data.length >= 1);
+  console.log("isSuccess", isSuccess);
   if (isLoading) return <div>is Loading....</div>;
   return (
     <div>
-      {isSuccess && (
+      {isSuccess && data.length >= 1 ? (
         <ApexCharts
           type="candlestick"
           series={[
@@ -68,6 +69,8 @@ function Chart({ coinId }: ChartProps) {
             },
           }}
         />
+      ) : (
+        <div>data가 존재하지않습니다.</div>
       )}
     </div>
   );
